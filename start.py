@@ -1,9 +1,12 @@
+import os
 import subprocess
 import time
+import threading
+import uvicorn
 
 TELEGRAM_BOT_TOKEN = "8969205331:AAEbSajtwcmJ2NzlaMzg4Ksq0JkoQeURUqg"
 
-# إنشاء ملف bot.py وتضمين التوكن وكود الاستجابة تلقائياً
+# 1. إنشاء ملف bot.py تلقائياً
 bot_code = f"""
 import requests
 from telegram import Update
@@ -44,11 +47,15 @@ if __name__ == '__main__':
 with open("bot.py", "w", encoding="utf-8") as f:
     f.write(bot_code)
 
-print("🚀 تشغيل سيرفر MoneyPrinterTurbo (API)...")
-server_process = subprocess.Popen(["python", "main.py"])
+# 2. تشغيل بوت تيليجرام في خلفية منفصلة (Background Thread)
+def run_bot():
+    time.sleep(5) # الانتظار قليلاً لضمان عمل السيرفر
+    print("🤖 بدء تشغيل بوت تيليجرام...")
+    os.system("python bot.py")
 
-print("⏳ الانتظار 5 ثوانٍ لضمان استقرار السيرفر...")
-time.sleep(5)
+bot_thread = threading.Thread(target=run_bot, daemon=True)
+bot_thread.start()
 
-print("🤖 تشغيل بوت تيليجرام...")
-subprocess.run(["python", "bot.py"])
+# 3. تشغيل سيرفر المشروع الأساسي (FastAPI / main)
+print("🚀 تشغيل سيرفر MoneyPrinterTurbo الأساسي...")
+os.system("python main.py")
