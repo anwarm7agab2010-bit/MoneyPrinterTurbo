@@ -55,9 +55,9 @@ def run_bot():
 bot_thread = threading.Thread(target=run_bot, daemon=True)
 bot_thread.start()
 
-# 3. تشغيل تطبيق FastAPI الأساسي مباشرة عبر uvicorn ليتوافق مع بورتات Render
+# 3. تشغيل السيرفر بالمسار الصحيح وتجنب خطأ وحدة الاستيراد
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     print(f"🚀 تشغيل سيرفر MoneyPrinterTurbo على البورت {port}...")
-    # استيراد وتوجيه السيرفر بالشكل المتوافق مع هيكل المشروع
-    uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=False)
+    # التحقق من تشغيل الملف الأساسي للمشروع
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
