@@ -1,7 +1,7 @@
 import os
-import subprocess
 import time
 import threading
+import uvicorn
 
 TELEGRAM_BOT_TOKEN = "8969205331:AAEbSajtwcmJ2NzlaMzg4Ksq0JkoQeURUqg"
 
@@ -55,10 +55,9 @@ def run_bot():
 bot_thread = threading.Thread(target=run_bot, daemon=True)
 bot_thread.start()
 
-# 3. تشغيل سيرفر MoneyPrinterTurbo بالطريقة الصحيحة (عبر main.py أو webui.py)
+# 3. تشغيل تطبيق FastAPI الأساسي مباشرة عبر uvicorn ليتوافق مع بورتات Render
 if __name__ == "__main__":
-    port = os.environ.get("PORT", "8080")
-    os.environ["PORT"] = str(port)
-    print(f"🚀 تشغيل سيرفر MoneyPrinterTurbo...")
-    # تشغيل ملف الـ main أو الـ webui مباشرة حسب هيكل المشروع
-    os.system("python main.py")
+    port = int(os.environ.get("PORT", 10000))
+    print(f"🚀 تشغيل سيرفر MoneyPrinterTurbo على البورت {port}...")
+    # استيراد وتوجيه السيرفر بالشكل المتوافق مع هيكل المشروع
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=False)
