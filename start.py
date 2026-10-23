@@ -6,7 +6,7 @@ import uvicorn
 
 TELEGRAM_BOT_TOKEN = "8969205331:AAEbSajtwcmJ2NzlaMzg4Ksq0JkoQeURUqg"
 
-# 1. إنشاء ملف bot.py تلقائياً
+# 1. إنشاء ملف bot.py تلقائياً للتيليجرام
 bot_code = f"""
 import requests
 from telegram import Update
@@ -47,15 +47,17 @@ if __name__ == '__main__':
 with open("bot.py", "w", encoding="utf-8") as f:
     f.write(bot_code)
 
-# 2. تشغيل بوت تيليجرام في خلفية منفصلة (Background Thread)
+# 2. تشغيل بوت تيليجرام في الخلفية
 def run_bot():
-    time.sleep(5) # الانتظار قليلاً لضمان عمل السيرفر
+    time.sleep(6)
     print("🤖 بدء تشغيل بوت تيليجرام...")
     os.system("python bot.py")
 
 bot_thread = threading.Thread(target=run_bot, daemon=True)
 bot_thread.start()
 
-# 3. تشغيل سيرفر المشروع الأساسي (FastAPI / main)
-print("🚀 تشغيل سيرفر MoneyPrinterTurbo الأساسي...")
-os.system("python main.py")
+# 3. تشغيل السيرفر مع التقاط بورت Render الصحيح
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8080))
+    print(f"🚀 تشغيل سيرفر MoneyPrinterTurbo على البورت {port}...")
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
