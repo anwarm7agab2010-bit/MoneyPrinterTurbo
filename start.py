@@ -2,7 +2,6 @@ import os
 import subprocess
 import time
 import threading
-import uvicorn
 
 TELEGRAM_BOT_TOKEN = "8969205331:AAEbSajtwcmJ2NzlaMzg4Ksq0JkoQeURUqg"
 
@@ -56,8 +55,10 @@ def run_bot():
 bot_thread = threading.Thread(target=run_bot, daemon=True)
 bot_thread.start()
 
-# 3. تشغيل السيرفر مع التقاط بورت Render الصحيح
+# 3. تشغيل سيرفر MoneyPrinterTurbo بالطريقة الصحيحة (عبر main.py أو webui.py)
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    print(f"🚀 تشغيل سيرفر MoneyPrinterTurbo على البورت {port}...")
-    uvicorn.run("main:app", host="0.0.0.0", port=port)
+    port = os.environ.get("PORT", "8080")
+    os.environ["PORT"] = str(port)
+    print(f"🚀 تشغيل سيرفر MoneyPrinterTurbo...")
+    # تشغيل ملف الـ main أو الـ webui مباشرة حسب هيكل المشروع
+    os.system("python main.py")
