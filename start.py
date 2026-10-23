@@ -55,9 +55,19 @@ def run_bot():
 bot_thread = threading.Thread(target=run_bot, daemon=True)
 bot_thread.start()
 
-# 3. تشغيل السيرفر بالمسار الصحيح وتجنب خطأ وحدة الاستيراد
+# 3. تشغيل سيرفر MoneyPrinterTurbo
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     print(f"🚀 تشغيل سيرفر MoneyPrinterTurbo على البورت {port}...")
-    # التحقق من تشغيل الملف الأساسي للمشروع
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
+    
+    # محاولة استيراد التطبيق مباشرة لضمان عدم حدوث خطأ Attribute "app" not found
+    try:
+        from main import app as mpt_app
+        uvicorn.run(mpt_app, host="0.0.0.0", port=port)
+    except (ImportError, AttributeError):
+        try:
+            from app.main import app as mpt_app
+            uvicorn.run(mpt_app, host="0.0.0.0", port=port)
+        except Exception as e:
+            print(f"⚠️ جاري التشغيل المباشر عبر السكريبت الرئيسي: {e}")
+            os.system(f"python main.py --port {port}")
